@@ -1,0 +1,4 @@
+#Transaction
+KIND_STEREO = 0
+KIND_NAV = 1
+KIND_ENGINE = 2
