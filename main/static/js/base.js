@@ -1,9 +1,23 @@
 function addNode(){
     var id = $("#node_id").val();
+    var version = $("#node_version").val();
     if(id) {
-        $.post("http://127.0.0.1:8000/p2p/NN/", {id: id});
+        $.post("http://127.0.0.1:8000/p2p/NN/", {id: id, version: version});
         $("#new_node_modal").modal('hide');
         $("#node_id").val("");
+        //location.reload();
+    }
+}
+
+function makeSimulation(){
+    var nodes_count = $("#nodes_count").val();
+    var transactions_count = $("#transactions_count").val();
+    if(nodes_count && transactions_count) {
+        $.post("http://127.0.0.1:8000/p2p/NS/", {nodes_count: nodes_count, transactions_count: transactions_count});
+        $("#new_simulation_modal").modal('hide');
+        $("#nodes_count").val("");
+        $("#transactions_count").val("");
+        //location.reload();
     }
 }
 
@@ -12,6 +26,9 @@ function addTransaction(){
     var to = $("#input_to").val();
     var kind = $("#input_kind").val();
 
-    $.post("http://127.0.0.1:8000/p2p/NT/", {from: from, to: to, kind: kind });
-        $("#new_transaction_modal").modal('hide')
+    $.post("http://127.0.0.1:8000/p2p/NT/", {from: from, to: to, kind: kind.toString() });
+    $("#new_transaction_modal").modal('hide')
+    location.reload();
 }
+
+

@@ -21,5 +21,6 @@ from p2p import views
 urlpatterns = [
     path('NN/', views.new_node),
     path('NT/', views.new_transaction),
+    path('NS/', views.new_simulation),
     path('size/', views.size),
 ]

@@ -14,7 +14,8 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-    <script src="{% static 'js/base.js' %}"></script>
+        <script src="{% static 'js/base.js' %}"></script>
+    <script src="{% static 'js/detail.js' %}"></script>
     {% endblock %}
 
     {% block css %}
@@ -34,7 +35,8 @@
       <div class="row">
         <ul class="nav flex-column col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar">
           <li class="nav-item">
-            <button class="btn btn-secondary" data-toggle="modal" data-target="#new_node_modal">Add node</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#new_simulation_modal">Make simulation</button>
+            <button class="btn btn-secondary mt-1" data-toggle="modal" data-target="#new_node_modal">Add node</button>
           </li>
           <li class="nav-item mt-1">
               {% if nodes|length > 1 %}
@@ -54,11 +56,18 @@
             <div class="card-deck">
             {% for node in nodes %}
                 <div class="card border-info mb-3" style="max-width: 20rem;">
-                      <div class="card-header">ID: {{node.id}}</div>
+                      <div class="card-header">ID: {{node.node.id}}</div>
                       <div class="card-body text-info">
-                        <h4 class="card-title">About</h4>
-                        <p class="card-text">Private Key: {{node.privkey}}</p>
-                        <p class="card-text">Chain: {{node.chain}}</p>
+                          <h4>About</h4>
+                          <h6>Blocks: {{ node.node.chain.chain|length }}</h6>
+                          <h6>Transactions: {{ node.count_transactions }}</h6>
+                          <br>
+                          <h4>Versions</h4>
+                          <h6>Navigation version: {{ node.version_nav }}</h6>
+                          <h6>Engine version: {{ node.version_engine }}</h6>
+                          <h6>Stereo version: {{ node.version_stereo }}</h6>
+                          <br>
+                          <a href="/detail/{{ node.node.id }}">Detail view</a>
                       </div>
                     </div>
             {% endfor%}
@@ -84,11 +93,45 @@
                 <div class="form-group">
                         <label for="node_id">ID</label>
                         <input type="text" class="form-control" id="node_id">
+                        <label for="node_version">Version</label>
+                        <select id="node_version" class="form-control">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                      </select>
                     </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="button" onclick="addNode()" class="btn btn-primary">Add</button>
+              </div>
+        </div>
+      </div>
+    </div>
+
+            <!-- new simulation -->
+    <div class="modal fade" id="new_simulation_modal" tabindex="-1" role="dialog" aria-labelledby="new_simulation_modalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="new_simulation_modalLabel">Make simulation</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+              <div class="modal-body">
+                <div class="form-group">
+                        <label for="nodes_count">Node count</label>
+                        <input type="text" class="form-control" id="nodes_count">
+                        <label for="transactions_count">Transactions count</label>
+                        <input type="text" class="form-control" id="transactions_count">
+                    </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" onclick="makeSimulation()" class="btn btn-primary">Add</button>
               </div>
         </div>
       </div>
@@ -110,7 +153,7 @@
                       <label for="input_from">From</label>
                       <select id="input_from" class="form-control">
                           {% for node in nodes %}
-                            <option>{{node.id}}</option>
+                            <option>{{node.node.id}}</option>
                           {% endfor %}
                       </select>
                   </div>
@@ -118,15 +161,15 @@
                       <label for="input_to">To</label>
                       <select id="input_to" class="form-control">
                         {% for node in nodes %}
-                            <option>{{node.id}}</option>
+                            <option>{{node.node.id}}</option>
                           {% endfor %}
                       </select>
                   </div>
               </div>
               <div class="form-row">
                   <div class="form-group col-md-6">
-                      <label for="input_maj">Kind of MAJ</label>
-                      <select id="input_maj" class="form-control">
+                      <label for="input_kind">Kind of MAJ</label>
+                      <select multiple id="input_kind" class="form-control">
                         <option>Engine</option>
                         <option>Stereo</option>
                         <option>Navigation</option>

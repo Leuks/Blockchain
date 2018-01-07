@@ -7,3 +7,4 @@ def home(request):
     text = """<h1>Bienvenue sur mon blog !</h1>
               <p>Les crêpes bretonnes ça tue des mouettes en plein vol !</p>"""
     return HttpResponse(text)
+
