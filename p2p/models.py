@@ -67,25 +67,6 @@ class Network(models.Model):
         self.nodes = []
         self.main_node = self.build_main_node()
 
-    def get_alea_kind(self):
-        kind = "";
-        alea = random.randint(0, 6)
-        if (alea == 0):
-            kind = "Stereo"
-        elif (alea == 1):
-            kind = "Navigation"
-        elif (alea == 2):
-            kind = "Engine"
-        elif (alea == 3):
-            kind = "Navigation,Stereo"
-        elif (alea == 4):
-            kind = "Navigation,Engine"
-        elif (alea == 5):
-            kind = "Stereo,Engine"
-        elif (alea == 5):
-            kind = "Navigation,Stereo,Engine"
-        return kind
-
     def get_alea_node(self):
         alea = random.randint(0, len(self.nodes) - 1)
         return self.nodes[alea]
@@ -95,7 +76,7 @@ class Network(models.Model):
             self.new_node("Node" + str(len(self.nodes)), random.randint(1, 5))
 
         for i in range(0, int(transaction_count)):
-            kind = self.get_alea_kind()
+            kind = "Navigation,Stereo,Engine"
             first_node = self.get_alea_node()
             second_node = self.get_alea_node()
 
