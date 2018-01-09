@@ -23,5 +23,9 @@ def new_simulation(request):
     p2pNetwork.start_simulation(nodes_count, transactions_count)
     return HttpResponse()
 
+def reset(request):
+    p2pNetwork.reset()
+    return HttpResponse()
+
 def size(request):
     return HttpResponse(p2pNetwork.size())
