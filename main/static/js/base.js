@@ -31,4 +31,9 @@ function addTransaction(){
     location.reload();
 }
 
+function clearNetwork(){
+    $.post("http://127.0.0.1:8000/p2p/CN/");
+    location.reload();
+}
+
 

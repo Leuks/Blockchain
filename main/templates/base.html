@@ -42,6 +42,9 @@
               {% if nodes|length > 1 %}
                 <button class="btn btn-secondary" data-toggle="modal" data-target="#new_transaction_modal">Add transaction</button>
               {% endif %}
+          {% if nodes|length > 0 %}
+                <button class="btn btn-danger mt-1" onclick="clearNetwork();">Reset network</button>
+              {% endif %}
           </li>
         </ul>
       </div>
