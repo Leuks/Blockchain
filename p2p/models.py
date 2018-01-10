@@ -23,7 +23,8 @@ class Network(models.Model):
             'chain': Blockchain(self.main_node, version) if int(hacked) == 0 else Blockchain(self.build_hacked_node(), version)
         }
         self.nodes.append(node)
-        print("NODE CREATED")
+        if(enum.DEBUG):
+            print("NODE CREATED")
 
     def keyGeneration(self, id):
         (pubkey, privkey) = rsa.newkeys(512)
@@ -83,7 +84,7 @@ class Network(models.Model):
 
     def start_simulation(self, node_count, transaction_count):
         for i in range(0, int(node_count)):
-            self.new_node("Node" + str(len(self.nodes)), random.randint(1, 5))
+            self.new_node("Node" + str(len(self.nodes)), random.randint(1, 5), 0)
 
         for i in range(0, int(transaction_count)):
             kind = "Navigation,Stereo,Engine"
