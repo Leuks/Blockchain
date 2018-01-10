@@ -29,3 +29,19 @@ def home(request):
 def detail(request, node_id):
     node = p2pNetwork.find_node_by_id(node_id)
     return render(request, 'detail.html', {"node": node})
+
+def all(request):
+    current_nodes = []
+
+    nodes = p2pNetwork.nodes
+    for node in nodes:
+        sum_transac = 0
+        for block in node['chain'].chain:
+            sum_transac += len(block['transactions'])
+
+        current_nodes.append({
+            'node': node,
+            'count_transactions': sum_transac
+        })
+    return render(request, 'all.html', {"nodes": current_nodes})
+

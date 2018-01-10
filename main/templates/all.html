@@ -1,0 +1,97 @@
+
+<!doctype html>
+<html>
+
+<head>
+    <title>Global view</title>
+
+    {% load static %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js"></script>
+        <script src="{% static 'js/utils.js' %}"></script>
+
+    <style>
+    canvas {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="canvas-holder" style="width:100%">
+        <canvas id="chart-area"></canvas>
+    </div>
+
+    <script>
+
+    var randomScalingFactor = function() {
+        return Math.round(Math.random() * 100);
+    };
+
+    var chartColors = window.chartColors;
+    var color = Chart.helpers.color;
+    var config = {
+        data: {
+            datasets: [{
+                data: [
+
+                ],
+                backgroundColor: [
+
+                ],
+                label: 'My dataset' // for legend
+            }],
+            labels: [
+
+            ]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                position: 'right',
+            },
+            title: {
+                display: true,
+                text: 'Global view of network transactions'
+            },
+            scale: {
+              ticks: {
+                beginAtZero: true
+              },
+              reverse: false
+            },
+            animation: {
+                animateRotate: false,
+                animateScale: true
+            }
+        }
+    };
+
+    window.onload = function() {
+        var ctx = document.getElementById("chart-area");
+        window.myPolarArea = Chart.PolarArea(ctx, config);
+
+        {% for node in nodes %}
+            addSample({{ node.count_transactions }}, "{{ node.node.id }}")
+        {% endfor %}
+    };
+    
+    var colorNames = Object.keys(window.chartColors);
+
+    function addSample(value, name){
+        config.data.labels.push(name);
+        config.data.datasets.forEach(function(dataset) {
+            var colorName = colorNames[config.data.labels.length % colorNames.length];
+            dataset.backgroundColor.push(window.chartColors[colorName]);
+            dataset.data.push(value);
+        });
+        window.myPolarArea.update();
+    };
+
+
+    </script>
+</body>
+
+</html>

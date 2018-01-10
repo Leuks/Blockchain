@@ -21,4 +21,5 @@ from main import views
 urlpatterns = [
     path('', views.home),
     path('detail/<node_id>', views.detail),
+    path('all', views.all),
 ]
