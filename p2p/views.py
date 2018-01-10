@@ -5,8 +5,8 @@ from Blockchain.apps import p2pNetwork
 def new_node(request):
     id = request.POST.get("id")
     version = request.POST.get("version")
-    print("version" + version)
-    p2pNetwork.new_node(id, int(version))
+    hacked = request.POST.get("hacked")
+    p2pNetwork.new_node(id, int(version), hacked)
     return HttpResponse()
 
 def new_transaction(request):

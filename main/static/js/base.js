@@ -1,8 +1,9 @@
 function addNode(){
     var id = $("#node_id").val();
     var version = $("#node_version").val();
+    var check = $("#check:checked").length;
     if(id) {
-        $.post("http://127.0.0.1:8000/p2p/NN/", {id: id, version: version}, function (data) {
+        $.post("http://127.0.0.1:8000/p2p/NN/", {id: id, version: version, hacked : check}, function (data) {
             $("#new_node_modal").modal('hide');
             $("#node_id").val("");
             location.reload();

@@ -8,3 +8,5 @@ VERSION_2 = 2
 VERSION_3 = 3
 VERSION_4 = 4
 VERSION_5 = 5
+
+DEBUG = False

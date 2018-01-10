@@ -11,11 +11,12 @@ class Blockchain(models.Model):
     def __init__(self, main_node, version):
         self.chain = []
         self.current_transactions = []
+        self.hacked = main_node['id'] != 'main'
 
         # Create the genesis block
-        self.new_transaction(KIND_ENGINE, main_node, version, False)
-        self.new_transaction(KIND_STEREO, main_node, version, False)
-        self.new_transaction(KIND_NAV, main_node, version, False)
+        self.new_transaction(KIND_ENGINE, main_node, version, False, self.hacked)
+        self.new_transaction(KIND_STEREO, main_node, version, False, self.hacked)
+        self.new_transaction(KIND_NAV, main_node, version, False, self.hacked)
 
         block = {
             'id': 1,
@@ -52,10 +53,11 @@ class Blockchain(models.Model):
 
         self.current_transactions = []
         self.chain.append(block)
-        print("BLOCK ADDED")
+        if DEBUG:
+            print("BLOCK ADDED")
 
-    def new_transaction(self, kind, sender, version, add):
-        if(self.verify_chain(sender) and version > self.get_current_version_for_kind(kind)):
+    def new_transaction(self, kind, sender, version, add, hacked):
+        if(hacked):
             transaction = {
                 'kind': kind,
                 'sender_id': sender['id'],
@@ -64,9 +66,24 @@ class Blockchain(models.Model):
 
             signed_transaction = self.sign_transaction(transaction, sender)
             self.current_transactions.append(signed_transaction)
-            print("TRANSACTION ADDED")
+            if DEBUG:
+                print("TRANSACTION ADDED")
             if add:
                 self.new_block()
+        else:
+            if(self.verify_chain(sender) and version > self.get_current_version_for_kind(kind)):
+                transaction = {
+                    'kind': kind,
+                    'sender_id': sender['id'],
+                    'version': version
+                }
+
+                signed_transaction = self.sign_transaction(transaction, sender)
+                self.current_transactions.append(signed_transaction)
+                if DEBUG:
+                    print("TRANSACTION ADDED")
+                if add:
+                    self.new_block()
 
     def sign_transaction(self, transaction, sender):
         transaction['sign'] = rsa.sign(json.dumps(transaction['kind']).encode(), sender['privkey'], 'SHA-1')
